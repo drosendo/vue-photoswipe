@@ -63,28 +63,39 @@
             </div>
 
         </div>
-        <div v-if="thumbnails" class="arrow-down togglehidesvi" v-on:click='toggle()' onclick="this.classList.toggle('active')"></div>
-        <div v-if="thumbnails" class="photoSwipe_innerthumbs flexslider">
-            <ul class="slides">
-                <li v-for="(item,k) in items" :key='k' class='svili'><img :src="item.msrc" /></li>
-            </ul>
+        <div class="flexslider-svi">
+            <div v-if="thumbnails" class="arrow-down togglehidesvi" v-on:click='toggle()'>
+                <span class="dashicons" :class='"dashicons-arrow-"+up+"-alt2"'></span>
+            </div>
+            <div v-if="thumbnails" class="swiper-container gallery-pswp">
+                <div class="swiper-wrapper">
+                    <div class="swiper-slide" v-for="(item) in items.slider" :key="item.key" v-if="item.single.src"
+                        :data-svizoom-image="item.single.full_image">
+                        <img :src="item.single.thumb_image" :alt="item.single.alt" :srcset="item.single.srcset" :sizes="item.single.sizes"
+                            :width="item.single.width" :height="item.single.height">
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 </template>
 
 <script>
+    import "swiper/dist/css/swiper.css";
+    import Swiper from "swiper";
     import 'photoswipe/dist/photoswipe.css'
     import 'photoswipe/dist/default-skin/default-skin.css'
 
     import PhotoSwipe from 'photoswipe/dist/photoswipe'
     import PhotoSwipeDefaultUI from 'photoswipe/dist/photoswipe-ui-default'
-    import flexslider from 'flexslider';
 
     export default {
         data: function () {
             return {
                 thumbnails: false,
-                items: []
+                items: [],
+                up: 'down',
+                mswiper: false,
             }
         },
         mounted: function () {},
@@ -93,68 +104,100 @@
                 let _this = this;
                 this.thumbnails = thumbnails;
                 this.items = items;
-                this.photoswipe = new PhotoSwipe(this.$el, PhotoSwipeDefaultUI, items, options);
+                this.photoswipe = new PhotoSwipe(this.$el, PhotoSwipeDefaultUI, items.box, options);
                 this.photoswipe.init();
-
+                console.log("INDEX",index)
                 var handle_visible = setInterval(function () {
+
                     if ($('.pswp').is(":visible")) {
-                        $('.photoSwipe_innerthumbs,.togglehidesvi').hide();
+                        setTimeout(function () {
+                            $('.togglehidesvi').hide();
 
-                        $.flexslider($('.photoSwipe_innerthumbs.flexslider'), {
-                            animation: "slide",
-                            controlNav: false,
-                            animationLoop: false,
-                            barsSize: {
-                                top: 44,
-                                bottom: 44
-                            },
-                            slideshow: true,
-                            itemWidth: 100,
-                            itemMargin: 5,
-                            prevText: "", //String: Set the text for the "previous" directionNav item
-                            nextText: "",
-                            start: function (slider) {
-                                if (slider.pagingCount === 1)
-                                    slider.addClass('flex-centered');
+                            let swiperOptionTop = {
+                                 slidesPerView: 10,
+                                spaceBetween: 10,
+                                autoHeight: true,
+                                width:100,
+                                centeredSlides: true,
+                                slideToClickedSlide: true,
+                                watchSlidesVisibility: true,
+                                observer:true,
+                                on: {
+                                    init: () => {
+                                        $('.togglehidesvi').slideDown();
+                                        _this.initClick();
+                                    },
+                                    slideChange: () => {
+                                        _this.onSlideChange();
+                                    }
+                                },
+                                breakpoints: {
+                                    // when window width is <= 320px
+                                    320: {
+                                        slidesPerView: 2,
+                                        spaceBetween: 10
+                                    },
+                                    // when window width is <= 480px
+                                    480: {
+                                        slidesPerView: 3,
+                                        spaceBetween: 20
+                                    },
+                                    // when window width is <= 640px
+                                    640: {
+                                        slidesPerView: 4,
+                                        spaceBetween: 30
+                                    },
+                                }
+                            };
 
-                                _this.initClick();
-                            }
-                        });
+                            _this.mswiper = new Swiper($(".gallery-pswp"), swiperOptionTop);
 
+                        }, 200)
                         clearInterval(handle_visible);
                     }
                 }, 5);
 
 
             },
+            onSlideChange() {
+                this.photoswipe.goTo(this.mswiper.activeIndex);
+            },
             initClick() {
+                setTimeout(()=>{
+                    this.mswiper.update();
+                },300)
                 var _this = this;
-                var slider = $('.photoSwipe_innerthumbs');
-                $("div.photoSwipe_innerthumbs img").eq(_this.photoswipe.getCurrentIndex()).addClass('svifaded');
+                var slider = $('.gallery-pswp');
+                var slide = $("div.gallery-pswp .swiper-slide");
 
-                jQuery(_this.$el).on('click', 'div.photoSwipe_innerthumbs img', function (e) {
-                    $('div.photoSwipe_innerthumbs img').removeClass("svifaded");
-                    _this.photoswipe.goTo($("div.photoSwipe_innerthumbs img").index($(this)));
-                });
+                $("div.gallery-pswp .swiper-slide").eq(this.photoswipe.getCurrentIndex()).addClass('svifaded');
+
+
 
                 this.photoswipe.listen('afterChange', function () {
-                    $('div.photoSwipe_innerthumbs img').removeClass("svifaded");
-                    $("div.photoSwipe_innerthumbs img").eq(_this.photoswipe.getCurrentIndex()).addClass(
+                    $('div.gallery-pswp .swiper-slide').removeClass("svifaded");
+                    _this.mswiper.slideTo(_this.photoswipe.getCurrentIndex())
+                    $("div.gallery-pswp .swiper-slide").eq(_this.photoswipe.getCurrentIndex()).addClass(
                         'svifaded');
                 });
 
                 this.photoswipe.listen('close', function () {
-                    $('div.photoSwipe_innerthumbs img').removeClass("svifaded");
+                    $('div.gallery-pswp .swiper-slide').removeClass("svifaded");
                 });
 
                 slider.slideDown();
                 $('.togglehidesvi').slideDown();
             },
             toggle() {
-                var slider = $('.photoSwipe_innerthumbs');
+                var slider = $('div.gallery-pswp');
+                if (this.up = 'down')
+                    this.up = 'up'
+                else
+                    this.up = 'down';
                 slider.toggle();
             },
             close() {
+                this.mswiper.destroy();
                 this.photoswipe.close()
             }
         }
