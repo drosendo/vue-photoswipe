@@ -51,17 +51,17 @@
                 </div>
 
                 <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+                    <span class="dashicons dashicons-arrow-left-alt2"></span>
                 </button>
 
                 <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+                    <span class="dashicons dashicons-arrow-right-alt2"></span>
                 </button>
 
                 <div class="pswp__caption" :class="[thumbnails?'svicaption-top':'']">
                     <div class="pswp__caption__center"></div>
                 </div>
-
             </div>
-
         </div>
         <div class="flexslider-svi">
             <div v-if="thumbnails" class="arrow-down togglehidesvi" v-on:click='toggle()'>
@@ -69,8 +69,7 @@
             </div>
             <div v-if="thumbnails" class="swiper-container gallery-pswp">
                 <div class="swiper-wrapper">
-                    <div class="swiper-slide" v-for="(item) in items.slider" :key="item.key" v-if="item.single.src"
-                        :data-svizoom-image="item.single.full_image">
+                    <div class="swiper-slide" v-for="(item) in items.slider" :key="item.key">
                         <img :src="item.single.thumb_image" :alt="item.single.alt" :srcset="item.single.srcset" :sizes="item.single.sizes"
                             :width="item.single.width" :height="item.single.height">
                     </div>
@@ -83,8 +82,6 @@
 <script>
     import "swiper/dist/css/swiper.css";
     import Swiper from "swiper";
-    import 'photoswipe/dist/photoswipe.css'
-    import 'photoswipe/dist/default-skin/default-skin.css'
 
     import PhotoSwipe from 'photoswipe/dist/photoswipe'
     import PhotoSwipeDefaultUI from 'photoswipe/dist/photoswipe-ui-default'
@@ -106,7 +103,6 @@
                 this.items = items;
                 this.photoswipe = new PhotoSwipe(this.$el, PhotoSwipeDefaultUI, items.box, options);
                 this.photoswipe.init();
-                console.log("INDEX",index)
                 var handle_visible = setInterval(function () {
 
                     if ($('.pswp').is(":visible")) {
@@ -114,14 +110,14 @@
                             $('.togglehidesvi').hide();
 
                             let swiperOptionTop = {
-                                 slidesPerView: 10,
+                                slidesPerView: 10,
                                 spaceBetween: 10,
                                 autoHeight: true,
-                                width:100,
+                                width: 100,
                                 centeredSlides: true,
                                 slideToClickedSlide: true,
                                 watchSlidesVisibility: true,
-                                observer:true,
+                                observer: true,
                                 on: {
                                     init: () => {
                                         $('.togglehidesvi').slideDown();
@@ -163,9 +159,9 @@
                 this.photoswipe.goTo(this.mswiper.activeIndex);
             },
             initClick() {
-                setTimeout(()=>{
+                setTimeout(() => {
                     this.mswiper.update();
-                },300)
+                }, 300)
                 var _this = this;
                 var slider = $('.gallery-pswp');
                 var slide = $("div.gallery-pswp .swiper-slide");
