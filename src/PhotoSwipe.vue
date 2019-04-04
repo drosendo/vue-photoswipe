@@ -61,7 +61,9 @@
                 <div class="pswp__caption" :class="[thumbnails?'svicaption-top':'']">
                     <div class="pswp__caption__center"></div>
                 </div>
+
             </div>
+
         </div>
         <div class="flexslider-svi">
             <div v-if="thumbnails" class="arrow-down togglehidesvi" v-on:click='toggle()'>
@@ -81,7 +83,6 @@
 
 <script>
     import "swiper/dist/css/swiper.css";
-    import Swiper from "swiper";
 
     import PhotoSwipe from 'photoswipe/dist/photoswipe'
     import PhotoSwipeDefaultUI from 'photoswipe/dist/photoswipe-ui-default'
@@ -105,9 +106,9 @@
                 this.photoswipe.init();
                 var handle_visible = setInterval(function () {
 
-                    if ($('.pswp').is(":visible")) {
+                    if ($jQsvi('.pswp').is(":visible")) {
                         setTimeout(function () {
-                            $('.togglehidesvi').hide();
+                            $jQsvi('.togglehidesvi').hide();
 
                             let swiperOptionTop = {
                                 slidesPerView: 10,
@@ -120,7 +121,7 @@
                                 observer: true,
                                 on: {
                                     init: () => {
-                                        $('.togglehidesvi').slideDown();
+                                        $jQsvi('.togglehidesvi').slideDown();
                                         _this.initClick();
                                     },
                                     slideChange: () => {
@@ -146,7 +147,7 @@
                                 }
                             };
 
-                            _this.mswiper = new Swiper($(".gallery-pswp"), swiperOptionTop);
+                            _this.mswiper = new _this.$swiper($jQsvi(".gallery-pswp"), swiperOptionTop);
 
                         }, 200)
                         clearInterval(handle_visible);
@@ -163,29 +164,29 @@
                     this.mswiper.update();
                 }, 300)
                 var _this = this;
-                var slider = $('.gallery-pswp');
-                var slide = $("div.gallery-pswp .swiper-slide");
+                var slider = $jQsvi('.gallery-pswp');
+                var slide = $jQsvi("div.gallery-pswp .swiper-slide");
 
-                $("div.gallery-pswp .swiper-slide").eq(this.photoswipe.getCurrentIndex()).addClass('svifaded');
+                $jQsvi("div.gallery-pswp .swiper-slide").eq(this.photoswipe.getCurrentIndex()).addClass('svifaded');
 
 
 
                 this.photoswipe.listen('afterChange', function () {
-                    $('div.gallery-pswp .swiper-slide').removeClass("svifaded");
+                    $jQsvi('div.gallery-pswp .swiper-slide').removeClass("svifaded");
                     _this.mswiper.slideTo(_this.photoswipe.getCurrentIndex())
-                    $("div.gallery-pswp .swiper-slide").eq(_this.photoswipe.getCurrentIndex()).addClass(
+                    $jQsvi("div.gallery-pswp .swiper-slide").eq(_this.photoswipe.getCurrentIndex()).addClass(
                         'svifaded');
                 });
 
                 this.photoswipe.listen('close', function () {
-                    $('div.gallery-pswp .swiper-slide').removeClass("svifaded");
+                    $jQsvi('div.gallery-pswp .swiper-slide').removeClass("svifaded");
                 });
 
                 slider.slideDown();
-                $('.togglehidesvi').slideDown();
+                $jQsvi('.togglehidesvi').slideDown();
             },
             toggle() {
-                var slider = $('div.gallery-pswp');
+                var slider = $jQsvi('div.gallery-pswp');
                 if (this.up = 'down')
                     this.up = 'up'
                 else
