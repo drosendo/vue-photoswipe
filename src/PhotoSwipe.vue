@@ -72,8 +72,8 @@
             <div v-if="thumbnails" class="swiper-container gallery-pswp">
                 <div class="swiper-wrapper">
                     <div class="swiper-slide" v-for="(item) in items.slider" :key="item.key">
-                        <img :src="item.single.thumb_image" :alt="item.single.alt" :srcset="item.single.srcset" :sizes="item.single.sizes"
-                            :width="item.single.width" :height="item.single.height">
+                        <img :src="item.single.thumb_image" :alt="item.single.alt" :srcset="item.single.srcset"
+                            :sizes="item.single.sizes" :width="item.single.width" :height="item.single.height">
                     </div>
                 </div>
             </div>
@@ -82,8 +82,6 @@
 </template>
 
 <script>
-    import "swiper/dist/css/swiper.css";
-
     import PhotoSwipe from 'photoswipe/dist/photoswipe'
     import PhotoSwipeDefaultUI from 'photoswipe/dist/photoswipe-ui-default'
 
@@ -146,9 +144,9 @@
                                     },
                                 }
                             };
-                            
+
                             if (typeof Swiper !== "undefined")
-                            _this.mswiper = new _this.$swiper($jQsvi(".gallery-pswp"), swiperOptionTop);
+                                _this.mswiper = new Swiper($jQsvi(".gallery-pswp"), swiperOptionTop);
 
                         }, 200)
                         clearInterval(handle_visible);
