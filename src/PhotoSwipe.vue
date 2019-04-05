@@ -108,21 +108,19 @@
                         setTimeout(function () {
                             $jQsvi('.togglehidesvi').hide();
 
-                            let swiperOptionTop = {
-                                slidesPerView: 10,
+                            var swiperOptionTop = {
+                                slidesPerView: 'auto',
                                 spaceBetween: 10,
-                                autoHeight: true,
-                                width: 100,
                                 centeredSlides: true,
                                 slideToClickedSlide: true,
                                 watchSlidesVisibility: true,
                                 observer: true,
                                 on: {
-                                    init: () => {
+                                    init: function init() {
                                         $jQsvi('.togglehidesvi').slideDown();
                                         _this.initClick();
                                     },
-                                    slideChange: () => {
+                                    slideChange: function slideChange() {
                                         _this.onSlideChange();
                                     }
                                 },
@@ -141,14 +139,12 @@
                                     640: {
                                         slidesPerView: 4,
                                         spaceBetween: 30
-                                    },
+                                    }
                                 }
                             };
-
-                            if (typeof Swiper !== "undefined")
-                                _this.mswiper = new Swiper($jQsvi(".gallery-pswp"), swiperOptionTop);
-
-                        }, 200)
+                            if (typeof Swiper !== "undefined") _this.mswiper = new Swiper($jQsvi(
+                                ".gallery-pswp"), swiperOptionTop);
+                        }, 200);
                         clearInterval(handle_visible);
                     }
                 }, 5);
