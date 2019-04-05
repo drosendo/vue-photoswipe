@@ -146,7 +146,8 @@
                                     },
                                 }
                             };
-
+                            
+                            if (typeof Swiper !== "undefined")
                             _this.mswiper = new _this.$swiper($jQsvi(".gallery-pswp"), swiperOptionTop);
 
                         }, 200)
